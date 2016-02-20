@@ -87,7 +87,6 @@ io.on('connection', function(socket) {
     if (!rooms[data.room]) {
       console.log('room does not exist');
     }
-<<<<<<< HEAD
     else if (rooms[data.room].users.indexOf(data.username) > -1) {
       rooms[data.room].users.splice(rooms[data.room].indexOf(data.username), 1);
       if (rooms[data.room].users.length === 0) {
