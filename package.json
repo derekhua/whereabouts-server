@@ -1,0 +1,24 @@
+{
+  "name": "whereabouts-server",
+  "version": "1.0.0",
+  "description": "server for whereabouts",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/derekhua/whereabouts-server.git"
+  },
+  "author": "derek, xin, matt, jon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/derekhua/whereabouts-server/issues"
+  },
+  "homepage": "https://github.com/derekhua/whereabouts-server#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "promise": "^7.1.1",
+    "socket.io": "^1.4.5"
+  }
+}
