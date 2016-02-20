@@ -18,15 +18,63 @@
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
+
+    <button id="user1" type="">user1Sub</button>
+    <button id="user2" type="">user2Sub</button>
+    <button id="update" type="">update</button>
+    <button id="user1Un" type="">user1Un</button>
+    <button id="user2Un" type="">user2Un</button>
+
+
+
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
     <script>
       var socket = io();
-      $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
-        $('#m').val('');
+      $('#user1').click(function(){
+        socket.emit('subscribe', 
+          {
+            "username": "user1", 
+            "room": "1"
+          });
         return false;
       });
+      $('#user2').click(function(){
+        socket.emit('subscribe', 
+          {
+            "username": "user2", 
+            "room": "1"
+          });
+        return false;
+      });
+
+      $('#user1Un').click(function(){
+        socket.emit('unsubscribe', 
+          {
+            "username": "user1", 
+            "room": "1"
+          });
+        return false;
+      });
+      $('#user2Un').click(function(){
+        socket.emit('unsubscribe', 
+          {
+            "username": "user2", 
+            "room": "1"
+          });
+        return false;
+      });
+
+      $('#update').click(function(){
+        socket.emit('update', 
+          {
+            "username": "user1", 
+            "room": "1"
+          });
+        return false;
+      });
+
       socket.on('chat message', function(msg){
         $('#messages').append($('<li>').text(msg));
       });
