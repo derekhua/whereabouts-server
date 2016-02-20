@@ -97,6 +97,17 @@ io.on('connection', function(socket) {
     }
   });
 
+  // Receives chat
+  socket.on('chat', function(data) {
+    if (rooms[data.room].indexOf(data.username) > -1) {
+      console.log(data.username + ' updating room ' + data.room);
+      console.log(data);
+      socket.broadcast.to(data.room).emit('chat', data);  
+    } else {
+      console.log(data.username + ' not in room ' + data.room);
+    }
+  });
+  
   // Disconnect
   socket.on('disconnect', function() {
     delete currentUsers[socket.id];
