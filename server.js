@@ -99,7 +99,7 @@ io.on('connection', function(socket) {
 
   // Receives chat
   socket.on('chat', function(data) {
-    if (rooms[data.room].indexOf(data.username) > -1) {
+    if (rooms[data.room] !== undefined && rooms[data.room].indexOf(data.username) > -1) {
       console.log(data.username + ' updating room ' + data.room);
       console.log(data);
       socket.broadcast.to(data.room).emit('chat', data);  
