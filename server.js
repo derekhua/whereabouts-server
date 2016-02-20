@@ -14,7 +14,11 @@ app.use(bodyParser.json({limit: '50mb'}));
 // {
 //   room1: {
 //     users: ['user1', 'user2'],
-//     chatHistory: [{}]
+//     chatHistory: [{
+//       username:
+//       text:
+//       room:
+//     }]
 //     locationHistory: [{}],
 //   }
 // }
@@ -59,18 +63,16 @@ io.on('connection', function(socket) {
     if (!rooms[data.room]) {
       console.log('creating new room ' + data.room);
       rooms[data.room] = {};
-      rooms[data.room].users = [data.username];
-      socket.join(data.room);
+      rooms[data.room].users = [data.username];      
       // Notify others in room
-      io.sockets.in(data.room).emit('notify', {
+      socket.broadcast.to(data.room).emit('notify', {
         "msg": data.username + " has joined!",
         "room": data.room
       });
     } 
-    else if (rooms[data.room].indexOf(data.username) === -1) {
+    else if (rooms[data.room].users.indexOf(data.username) === -1) {
       console.log(data.username + ' joining existing room ' + data.room);    
-      rooms[data.room].username.push(data.username);
-      socket.join(data.room); 
+      rooms[data.room].users.push(data.username);      
       // Notify others in room
       io.sockets.in(data.room).emit('notify', {
         "msg": data.username + " has joined!",
@@ -80,6 +82,7 @@ io.on('connection', function(socket) {
     else {
       console.log(data.username + ' already in room ' + data.room);    
     }
+    socket.join(data.room); 
   });
 
   socket.on('unsubscribe', function(data) {  
@@ -87,7 +90,6 @@ io.on('connection', function(socket) {
     if (!rooms[data.room]) {
       console.log('room does not exist');
     }
-<<<<<<< HEAD
     else if (rooms[data.room].users.indexOf(data.username) > -1) {
       rooms[data.room].users.splice(rooms[data.room].indexOf(data.username), 1);
       if (rooms[data.room].users.length === 0) {
@@ -99,12 +101,12 @@ io.on('connection', function(socket) {
           "msg": data.username + " has left",
           "room": data.room
         });
-      } 
-      socket.leave(data.room);
+      }       
     }  
     else {
       console.log(data.username + ' not in ' + data.room);
     }
+    socket.leave(data.room);
   });
 
 
@@ -114,6 +116,9 @@ io.on('connection', function(socket) {
       console.log(data.username + ' updating room ' + data.room);
       console.log(data);
       io.sockets.in(data.room).emit('update', data);  
+      if (rooms[data.room].locationHistory === undefined) {
+        rooms[data.room].locationHistory = [];
+      }
       rooms[data.room].locationHistory.push(data);
     } else {
       console.log(data.username + ' not in room ' + data.room);
