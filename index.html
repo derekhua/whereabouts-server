@@ -55,19 +55,20 @@
       });
 
       $('form').submit(function(){
-        socket.emit('update', 
+        socket.emit('chat', 
         {
-          "msg": $('#m').val(),
+          "text": $('#m').val(),
           "username": $('#username').val(),
           "room": $('#room').val(),
         });
         // $('#m').val('');
+        $('#messages').append($('<li>').text($('#m').val()));
         return false;
       });
 
-      socket.on('update', function(data) {
-        $('#messages').append($('<li>').text(data.msg));
-        console.log(data.msg);
+      socket.on('chat', function(data) {
+        $('#messages').append($('<li>').text(data.text));
+        console.log(data.text);
       });
 
     </script>
