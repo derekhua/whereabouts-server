@@ -67,9 +67,9 @@ io.on('connection', function(socket) {
         "room": data.room
       });
     } 
-    else if (rooms[data.room].users.indexOf(data.username) === -1) {
+    else if (rooms[data.room].indexOf(data.username) === -1) {
       console.log(data.username + ' joining existing room ' + data.room);    
-      rooms[data.room].users.push(data.username);
+      rooms[data.room].username.push(data.username);
       socket.join(data.room); 
       // Notify others in room
       io.sockets.in(data.room).emit('notify', {
@@ -87,6 +87,7 @@ io.on('connection', function(socket) {
     if (!rooms[data.room]) {
       console.log('room does not exist');
     }
+<<<<<<< HEAD
     else if (rooms[data.room].users.indexOf(data.username) > -1) {
       rooms[data.room].users.splice(rooms[data.room].indexOf(data.username), 1);
       if (rooms[data.room].users.length === 0) {
