@@ -12,23 +12,23 @@ app.use(bodyParser.json({limit: '50mb'}));
 
 // rooms object stores arrays of username in rooms
 // {
-//   room1: {
+//   roomID: {
+//     name: ,
 //     users: ['user1', 'user2'],
 //     chatHistory: [{
 //       username:
 //       text:
 //       room:
-//     }]
-//     locationHistory: [{}],
+//     }],
+//     locationHistory: [{}]
 //   }
 // }
 var rooms = {};
 
 // {
-//   "socketId1": "username1"
+//   "username1": "socketId"
 // }
 var currentUsers = {};
-
 
 // For cross-domain requests
 app.use(function(req, res, next) {
@@ -55,15 +55,18 @@ io.on('connection', function(socket) {
   // When users are on the app
   socket.on('active', function(data) {
     currentUsers[socket.id] = data.username;
+
   });
 
   // Joining and leaving rooms
   socket.on('subscribe', function(data) { 
     console.log(data.username + ' joining room ', data.room);
+
     if (!rooms[data.room]) {
       console.log('creating new room ' + data.room);
       rooms[data.room] = {};
-      rooms[data.room].users = [data.username];      
+      rooms[data.room].name = data.roomName;
+      rooms[data.room].users = [data.username];   
       // Notify others in room
       socket.broadcast.to(data.room).emit('notify', {
         "msg": data.username + " has joined!",
@@ -76,7 +79,8 @@ io.on('connection', function(socket) {
       // Notify others in room
       io.sockets.in(data.room).emit('notify', {
         "msg": data.username + " has joined!",
-        "room": data.room
+        "room": data.room,
+        "name": rooms[data.room].name
       });
     } 
     else {
@@ -128,7 +132,7 @@ io.on('connection', function(socket) {
   // Receives chat
   socket.on('chat', function(data) {
     if (rooms[data.room] !== undefined && rooms[data.room].users.indexOf(data.username) > -1) {
-      console.log(data.username + ' updating room ' + data.room);
+      console.log(data.username + ' updating room ' + data.room + ' name ' + rooms[data.room].name);
       console.log(data);
       socket.broadcast.to(data.room).emit('chat', data);  
       if (rooms[data.room].chatHistory === undefined) {
